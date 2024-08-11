@@ -1,46 +1,46 @@
-import Rect, { useState } from 'react';
+import Rect, { useState, useEffect } from 'react';
 import { TimelineCalendar, EventItem, RangeTime } from "@howljs/calendar-kit";
 import { StyleSheet } from 'react-native';
+import fetchCourses from '../utils/fetchCourses';
 
-const exampleEvent: EventItem = 
-{
-  id: '1',
-  title: 'Event 1',
-  start: (new Date()).toISOString(),
-  end: (new Date(Date.now() + 1e7)).toISOString(),
-  color: '#A3C7D6',
-};
+
 
 
 export default function Calendar() {
   const [events, setEvents] = useState<EventItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const _onDragCreateEnd = (event: RangeTime) => {
-    const randomId = Math.random().toString(36).slice(2, 10);
-    const newEvent = {
-      id: randomId,
-      title: randomId,
-      start: event.start,
-      end: event.end,
-      color: '#A3C7D6',
-    };
-    setEvents((prev) => [...prev, newEvent]);
+  useEffect(() => {
+    fetchCourses()
+      .then((res) => {
+        setEvents((prev) => [...prev, ...res]);
+        console.log(events);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  const _onDateChanged = (date: string) => {
+    setIsLoading(true);
+    fetchCourses()
+      .then((res) => {
+        setEvents((prev) => [...prev, ...res]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
+
   return (
     <TimelineCalendar 
       viewMode="week" 
-      events={[...events, exampleEvent]}
+      events={events}
       allowPinchToZoom
-      allowDragToCreate
-      onDragCreateEnd={_onDragCreateEnd}
-      theme={{
-        dragHourContainer: {
-          backgroundColor: '#FFF',
-          borderColor: '#001253',
-        },
-        dragHourText: { color: '#001253' },
-        dragCreateItemBackgroundColor: 'rgba(0, 18, 83, 0.2)',
-      }}
+      isLoading={isLoading}
+      onDateChanged={_onDateChanged}
+      theme={{ loadingBarColor: '#D61C4E' }}
+      initialDate='2024-05-10'
     />
   );
 }
