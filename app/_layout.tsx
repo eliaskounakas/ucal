@@ -10,10 +10,18 @@ export default function App() {
   return (
     <NavigationContainer independent={true}>
       <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="7 Days" component={() => <Calendar viewMode={'workWeek'}/>}/>
-        <Drawer.Screen name="5 Days" component={() => <Calendar viewMode={'week'}/>}/>
-        <Drawer.Screen name="3 Days" component={() => <Calendar viewMode={'threeDays'}/>}/>
-        <Drawer.Screen name="1 Day" component={() => <Calendar viewMode={'day'}/>}/>
+        <Drawer.Screen name="Week">
+          {() => <Calendar viewMode={'week'} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="Work Week">
+          {() => <Calendar viewMode={'workWeek'} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="3 Days">
+          {() => <Calendar viewMode={'threeDays'} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="Day">
+          {() => <Calendar viewMode={'day'} />}
+        </Drawer.Screen>
       </Drawer.Navigator>
     </NavigationContainer>
   );
