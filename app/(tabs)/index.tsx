@@ -37,4 +37,39 @@ async function fetchCourses(): Promise<EventItem[]> {
   return events;
 }
 
-fetchCourses().then(res => console.log(res));
+export default function Cal() {
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCourses()
+      .then((res) => {
+        setEvents((prev) => [...prev, ...res]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  return (
+    <SafeAreaView style={styles.container}>
+        <TimelineCalendar 
+          viewMode="week"
+          events={events}
+          isLoading={isLoading}
+          initialDate='2024-05-10'
+          theme={{ loadingBarColor: '#0063A6' }}
+        />
+    </SafeAreaView>
+
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { 
+    flex: 1, 
+    backgroundColor: '#FFF',
+    paddingTop: Platform.OS === 'android' ? 30 : 0
+   },
+});
+
