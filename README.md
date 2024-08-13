@@ -1,19 +1,17 @@
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
-
-1. Install dependencies
+1. Install [Bun](https://bun.sh/)
+   ```bash
+   curl -fsSL https://bun.sh/install | bash
+   ```
+2. Install dependencies
 
    ```bash
-   npm install
+   bun install
    ```
 
-2. Start the app
+3. Start the app
 
    ```bash
-    npx expo start
+   bun start
    ```
 
 In the output, you'll find options to open the app in a
