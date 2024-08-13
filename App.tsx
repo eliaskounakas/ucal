@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { EventItem } from '@howljs/calendar-kit';
-import Calendar from './index';
+import Calendar from './components/Calendar';
 
 
 const Drawer = createDrawerNavigator();
