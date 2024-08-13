@@ -10,22 +10,29 @@ NavigationBar.setPositionAsync('absolute')
 NavigationBar.setBackgroundColorAsync('#00000000')
 NavigationBar.setButtonStyleAsync("dark");
 
-export default function Calendar({viewMode}: {viewMode: CalendarViewMode}) {
-  const [events, setEvents] = useState<EventItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
- 
+interface CalendarProps {
+  viewMode: CalendarViewMode, 
+  events: EventItem[], 
+  setEvents: Function, 
+  isLoading: boolean, 
+  setIsLoading: Function
+}
+
+export default function Calendar({viewMode, events, setEvents, isLoading, setIsLoading}: CalendarProps) {
   const username: string = String(process.env.EXPO_PUBLIC_USERNAME);
   const password: string = String(process.env.EXPO_PUBLIC_PASSWORD);
 
 
   useEffect(() => {
-    fetchCourses(username, password)
+    if (isLoading) {
+      fetchCourses(username, password)
       .then((res) => {
         setEvents(() => [...res]);
       })
       .finally(() => {
         setIsLoading(false);
       });
+    }
   }, []);
 
   return (
