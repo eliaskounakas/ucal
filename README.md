@@ -1,3 +1,5 @@
+## Getting Started 
+
 1. Install [Bun](https://bun.sh/)
    ```bash
    curl -fsSL https://bun.sh/install | bash
