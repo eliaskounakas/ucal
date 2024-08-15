@@ -1,6 +1,6 @@
 ## Getting Started 
 
-1. Install [Bun](https://bun.sh/)
+1. Install [Bun](https://bun.sh/) (You can also use npm, pnpm, ...)
    ```bash
    curl -fsSL https://bun.sh/install | bash
    ```
