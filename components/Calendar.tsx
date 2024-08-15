@@ -10,22 +10,19 @@ NavigationBar.setPositionAsync('absolute')
 NavigationBar.setBackgroundColorAsync('#00000000')
 NavigationBar.setButtonStyleAsync("dark");
 
-interface CalendarProps {
+export interface CalendarProps {
   viewMode: CalendarViewMode, 
+  session: string,
   events: EventItem[], 
   setEvents: Function, 
   isLoading: boolean, 
   setIsLoading: Function
 }
 
-export default function Calendar({viewMode, events, setEvents, isLoading, setIsLoading}: CalendarProps) {
-  const username: string = String(process.env.EXPO_PUBLIC_USERNAME);
-  const password: string = String(process.env.EXPO_PUBLIC_PASSWORD);
-
-
+export default function Calendar({ viewMode, session, events, setEvents, isLoading, setIsLoading }: CalendarProps) {
   useEffect(() => {
     if (isLoading) {
-      fetchCourses(username, password)
+      fetchCourses(session)
       .then((res) => {
         setEvents(() => [...res]);
       })
@@ -60,13 +57,14 @@ const styles = StyleSheet.create({
 
 
 
-async function fetchCourses(username: string, password: string): Promise<EventItem[]> {
-  const uClient = new UspaceClient();
+async function fetchCourses(session: string): Promise<EventItem[]> {
+
   let courses: CourseData[] = []
   let events: EventItem[] = [];
   let id: number = 1;
-
-  await uClient.login(username, password);
+  
+  const uClient = new UspaceClient();
+  uClient.setSession = session;
   courses = await uClient.getCourses(2024, false);
   
   const uniqueCourses = new Set();
