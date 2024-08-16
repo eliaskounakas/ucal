@@ -3,12 +3,7 @@ import { SafeAreaView, StyleSheet, Platform } from 'react-native';
 import { TimelineCalendar, EventItem, CalendarViewMode } from '@howljs/calendar-kit';
 import UspaceClient from 'uspace-api-wrapper';
 import type { CourseData } from 'uspace-api-wrapper/dist/entities';
-import * as NavigationBar from 'expo-navigation-bar';
 import { StatusBar } from 'expo-status-bar';
-
-NavigationBar.setPositionAsync('absolute')
-NavigationBar.setBackgroundColorAsync('#00000000')
-NavigationBar.setButtonStyleAsync("dark");
 
 export interface CalendarProps {
   viewMode: CalendarViewMode, 
