@@ -23,14 +23,12 @@ export default function Login({ session, setSession }: LoginProps) {
         style={styles.loginContainer}
         logoImageSource={require('../assets/icon.png')}
         onLoginPress={async () => {
-         uClient.login(username, password)
-          .then(() => {
+         const loginResponse = await uClient.login(username, password);
+          if (loginResponse.ok) {
             setSession(uClient.getSession);
-          })
-          .catch((err) => {
-            console.error(err);
-            alert(err);
-          });
+            return;
+          }
+          alert(await loginResponse.text())
         }}
         onSignupPress={() => {}}
         onEmailChange={setUsername}

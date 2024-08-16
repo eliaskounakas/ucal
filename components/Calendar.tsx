@@ -58,14 +58,13 @@ const styles = StyleSheet.create({
 
 
 async function fetchCourses(session: string): Promise<EventItem[]> {
-
   let courses: CourseData[] = []
   let events: EventItem[] = [];
   let id: number = 1;
   
   const uClient = new UspaceClient();
   uClient.setSession = session;
-  courses = await uClient.getCourses(2024, false);
+  courses = await (await uClient.getCourses(2024, false)).json();
   
   const uniqueCourses = new Set();
   for (const course of courses) {
