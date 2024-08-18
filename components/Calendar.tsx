@@ -26,9 +26,10 @@ export interface CalendarModalProps {
 
 export default function Calendar({ viewMode, session, events, setEvents, isLoading, setIsLoading }: CalendarProps) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalProps, setModalProps] = useState<CalendarModalProps>({title: '', date:'', startTime: '', endTime: '', location: ''});
+  const [modalProps, setModalProps] = useState<CalendarModalProps | null>(null);
 
   useEffect(() => {
+    //need to make this better understandable, isLoaded/fetchedCourses/isCached would make more sense 
     if (isLoading) {
       fetchCourses(session)
       .then((res) => {
@@ -59,16 +60,16 @@ export default function Calendar({ viewMode, session, events, setEvents, isLoadi
           }}>
           <Pressable style={styles.modalContainer} onPress={() => setModalVisible(false)}>
               <Pressable style={[styles.modalView, {marginBottom: 0}]} >
-                <Text style={styles.modalTitle}>{modalProps.title}</Text>
+                <Text style={styles.modalTitle}>{modalProps?.title}</Text>
                 <View style={styles.divider}/>
                 <View style={styles.modalRow}>
                   <Feather name="clock" size={15} color="#ADD8E6" style={{alignSelf: 'center'}}/>
-                  <Text>{modalProps.startTime}-{modalProps.endTime}</Text>
-                  <Text>{modalProps.date}</Text>
+                  <Text>{modalProps?.startTime}-{modalProps?.endTime}</Text>
+                  <Text>{modalProps?.date}</Text>
                 </View>
                 <View style={styles.modalRow}>
                   <Feather name="map-pin" size={15} color="#ADD8E6" style={{alignSelf: 'center'}}/>
-                  <Text>{modalProps.location}</Text>
+                  <Text>{modalProps?.location}</Text>
                 </View>
               </Pressable>
           </Pressable>
