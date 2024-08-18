@@ -1,10 +1,11 @@
 import { useEffect, useState} from 'react'
-import { SafeAreaView, StyleSheet, Modal, View, Text, Pressable } from 'react-native';
+import { SafeAreaView, StyleSheet, Modal, View, Text, Pressable, Dimensions } from 'react-native';
+const { width: ScreenWidth } = Dimensions.get("screen");
 import { TimelineCalendar, EventItem, CalendarViewMode, PackedEvent } from '@howljs/calendar-kit';
 import UspaceClient from 'uspace-api-wrapper';
 import type { CourseData } from 'uspace-api-wrapper/dist/entities';
 import { StatusBar } from 'expo-status-bar';
-
+import Feather from '@expo/vector-icons/Feather';
 
 export interface CalendarProps {
   viewMode: CalendarViewMode, 
@@ -17,6 +18,7 @@ export interface CalendarProps {
 
 export interface CalendarModalProps {
   title: string,
+  date: string,
   startTime: string, 
   endTime: string,
   location: string,
@@ -24,7 +26,7 @@ export interface CalendarModalProps {
 
 export default function Calendar({ viewMode, session, events, setEvents, isLoading, setIsLoading }: CalendarProps) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalProps, setModalProps] = useState<CalendarModalProps>({title: '', startTime: '', endTime: '', location: ''});
+  const [modalProps, setModalProps] = useState<CalendarModalProps>({title: '', date:'', startTime: '', endTime: '', location: ''});
 
   useEffect(() => {
     if (isLoading) {
@@ -47,28 +49,30 @@ export default function Calendar({ viewMode, session, events, setEvents, isLoadi
           isLoading={isLoading}
           initialDate='2024-03-01'
           theme={{ loadingBarColor: '#0063A6' }}
-          onPressEvent={(event) => {setModalProps(generateModalProps(event)); setModalVisible(true);}}
+          onPressEvent={(event) => {setModalProps(generateModalProps(event)); setModalVisible(true); console.log(event)}}
         />
         <Modal
-          animationType="fade"
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
             setModalVisible(!modalVisible);
           }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>{modalProps.title}</Text>
-              <Text style={styles.modalText}>{modalProps.startTime}-{modalProps.endTime}</Text>
-              <Text style={styles.modalText}>{modalProps.location}</Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}>
-                <Text style={styles.textStyle}>Hide Modal</Text>
+          <Pressable style={styles.modalContainer} onPress={() => setModalVisible(false)}>
+              <Pressable style={[styles.modalView, {marginBottom: 0}]} >
+                <Text style={styles.modalTitle}>{modalProps.title}</Text>
+                <View style={styles.divider}/>
+                <View style={styles.modalRow}>
+                  <Feather name="clock" size={15} color="#ADD8E6" style={{alignSelf: 'center'}}/>
+                  <Text>{modalProps.startTime}-{modalProps.endTime}</Text>
+                  <Text>{modalProps.date}</Text>
+                </View>
+                <View style={styles.modalRow}>
+                  <Feather name="map-pin" size={15} color="#ADD8E6" style={{alignSelf: 'center'}}/>
+                  <Text>{modalProps.location}</Text>
+                </View>
               </Pressable>
-            </View>
-          </View>
-      </Modal>
+          </Pressable>
+        </Modal>
       </SafeAreaView>
 
       <StatusBar style='dark' />
@@ -79,6 +83,7 @@ export default function Calendar({ viewMode, session, events, setEvents, isLoadi
 function generateModalProps(event: PackedEvent): CalendarModalProps {
   const props: CalendarModalProps = {
     title: event.title ? event.title : 'unknown',
+    date: 'unknown',
     startTime: 'unknown',
     endTime: 'unknown',
     location: event.location ? event.location : 'unknown',
@@ -96,8 +101,11 @@ function generateModalProps(event: PackedEvent): CalendarModalProps {
     start.setHours(startHours, startMinutes);
     end.setHours(endHours, endMinutes);
 
-    props.startTime = start.toTimeString().slice(0,4);
-    props.endTime = end.toTimeString().slice(0, 4);
+    props.startTime = start.toTimeString().slice(0,5);
+    props.endTime = end.toTimeString().slice(0, 5);
+    
+    const date = new Date(Date.parse(event.start));
+    props.date = date.toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) 
   }
 
   return props;
@@ -120,7 +128,7 @@ async function fetchCourses(session: string): Promise<EventItem[]> {
     else uniqueCourses.add(lvNr);
 
     const title: string = course.lehrveranstaltung.titel;
-    const color: string = '#B1AFFF';
+    const color: string = '#ADD8E6';
 
     const uniqueDates = new Set();
     for (const date of course.lehrveranstaltung.termine) {
@@ -154,18 +162,16 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: '#FFF',
    },
-   centeredView: {
+  modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
   },
   modalView: {
-    margin: 20,
+    width: ScreenWidth * 0.9,
     backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
+    borderRadius: 5,
+    padding: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -175,25 +181,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
+  modalRow: {
+    flexDirection: 'row',
+    gap: 10,
     marginBottom: 15,
-    textAlign: 'center',
+    width: ScreenWidth * 0.9 - 40
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  divider: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1.5,
+    marginBottom: 15,
   },
 });
 
