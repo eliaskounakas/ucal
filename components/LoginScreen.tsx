@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Dimensions, StyleSheet, Text, ActivityIndicator, View } from 'react-native';
+import { Dimensions, StyleSheet, Text } from 'react-native';
 const { width: ScreenWidth } = Dimensions.get("screen");
 import LoginScreen from 'react-native-login-screen'
 import UspaceClient from 'uspace-api-wrapper';
@@ -26,6 +26,8 @@ export default function Login({ setSession }: LoginProps) {
           loginButtonText={isLoading ? "Logging in..."  : "Login"}
           loginButtonStyle={{ backgroundColor: isLoading ? "#ADD8E6" : "#25A9E2" }}
           onLoginPress={async () => {
+            if (isLoading) return;
+            
             setIsLoading(true);
             setErrorMessage('');
             const loginResponse = await uClient.login(username, password);
