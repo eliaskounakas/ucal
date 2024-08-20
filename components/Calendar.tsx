@@ -17,7 +17,6 @@ import {
 } from "@howljs/calendar-kit";
 import UspaceClient from "uspace-api-wrapper";
 import type { CourseData } from "uspace-api-wrapper/dist/entities";
-import { StatusBar } from "expo-status-bar";
 import Feather from "@expo/vector-icons/Feather";
 import MoodleLogo from "../assets/moodle.svg";
 import WebLink from "./WebLink";
@@ -25,10 +24,6 @@ import WebLink from "./WebLink";
 export interface CalendarProps {
   viewMode: CalendarViewMode;
   session: string;
-  events: EventItem[];
-  setEvents: Function;
-  isLoading: boolean;
-  setIsLoading: Function;
 }
 
 export interface CalendarModalProps {
@@ -44,16 +39,18 @@ export interface CalendarModalProps {
 export default function Calendar(props: CalendarProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalProps, setModalProps] = useState<CalendarModalProps | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [events, setEvents] = useState<EventItem[]>([]);
 
   useEffect(() => {
     //need to make this better understandable, isLoaded/fetchedCourses/isCached would make more sense
-    if (props.isLoading) {
+    if (isLoading) {
       fetchCourses(props.session)
         .then((res) => {
-          props.setEvents(() => [...res]);
+          setEvents(() => [...res]);
         })
         .finally(() => {
-          props.setIsLoading(false);
+          setIsLoading(false);
         });
     }
   }, []);
@@ -63,8 +60,8 @@ export default function Calendar(props: CalendarProps) {
       <SafeAreaView style={styles.container}>
         <TimelineCalendar
           viewMode={props.viewMode}
-          events={props.events}
-          isLoading={props.isLoading}
+          events={events}
+          isLoading={isLoading}
           initialDate="2024-03-01"
           theme={{ loadingBarColor: "#0063A6" }}
           onPressEvent={(event) => {
@@ -73,6 +70,7 @@ export default function Calendar(props: CalendarProps) {
             console.log(event);
           }}
         />
+
         <Modal
           transparent={true}
           visible={modalVisible}
@@ -136,8 +134,6 @@ export default function Calendar(props: CalendarProps) {
           </Pressable>
         </Modal>
       </SafeAreaView>
-
-      <StatusBar style="dark" />
     </>
   );
 }

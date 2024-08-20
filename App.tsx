@@ -7,7 +7,8 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import { EventItem } from "@howljs/calendar-kit";
+import { StatusBar } from "expo-status-bar";
+import * as SecureStore from "expo-secure-store";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Calendar from "./components/Calendar";
@@ -16,11 +17,9 @@ import Login from "./components/LoginScreen";
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  const [events, setEvents] = useState<EventItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [session, setSession] = useState<string>("");
 
-  const calendarProps = { session, events, setEvents, isLoading, setIsLoading };
+  const calendarProps = { session };
   const loginProps = { setSession };
 
   function CustomCalendarDrawerContent(props: any) {
@@ -49,7 +48,9 @@ export default function App() {
           <DrawerItem
             label="Logout"
             labelStyle={{ color: "#cc0000" }}
-            onPress={() => {
+            onPress={async () => {
+              await SecureStore.deleteItemAsync("ucal-username");
+              await SecureStore.deleteItemAsync("ucal-password");
               setSession("");
             }}
             icon={() => (
@@ -140,7 +141,12 @@ export default function App() {
     );
   }
 
-  return <Login {...loginProps} />;
+  return (
+    <>
+      <Login {...loginProps} />
+      <StatusBar style="auto" />
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
