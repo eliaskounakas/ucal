@@ -51,6 +51,7 @@ export default function Login({ setSession }: LoginProps) {
       })
       .finally(() => {
         SplashScreen.hideAsync();
+        setIsLoading(false);
       });
   }, []);
 
