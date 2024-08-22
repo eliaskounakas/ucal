@@ -12,6 +12,7 @@
     "@howljs/calendar-kit": "^1.13.2",
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.1.18",
+    "@react-navigation/stack": "^6.4.1",
     "@shopify/flash-list": "1.6.4",
     "expo": "~51.0.28",
     "expo-dev-client": "~4.0.23",

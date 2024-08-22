@@ -22,8 +22,12 @@ import MoodleLogo from "../assets/moodle.svg";
 import WebLink from "./WebLink";
 
 export interface CalendarProps {
-  viewMode: CalendarViewMode;
+  viewMode?: CalendarViewMode;
   session: string;
+  courses: EventItem[];
+  setCourses: Function;
+  isFetchingCourses: boolean;
+  setIsFetchingCourses: Function;
 }
 
 export interface CalendarModalProps {
@@ -39,18 +43,16 @@ export interface CalendarModalProps {
 export default function Calendar(props: CalendarProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalProps, setModalProps] = useState<CalendarModalProps | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [events, setEvents] = useState<EventItem[]>([]);
 
   useEffect(() => {
     //need to make this better understandable, isLoaded/fetchedCourses/isCached would make more sense
-    if (isLoading) {
+    if (props.isFetchingCourses) {
       fetchCourses(props.session)
         .then((res) => {
-          setEvents(() => [...res]);
+          props.setCourses(() => [...res]);
         })
         .finally(() => {
-          setIsLoading(false);
+          props.setIsFetchingCourses(false);
         });
     }
   }, []);
@@ -60,8 +62,8 @@ export default function Calendar(props: CalendarProps) {
       <SafeAreaView style={styles.container}>
         <TimelineCalendar
           viewMode={props.viewMode}
-          events={events}
-          isLoading={isLoading}
+          events={props.courses}
+          isLoading={props.isFetchingCourses}
           initialDate="2024-03-01"
           theme={{ loadingBarColor: "#0063A6" }}
           onPressEvent={(event) => {

@@ -9,18 +9,25 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import * as SecureStore from "expo-secure-store";
+import { EventItem } from "@howljs/calendar-kit";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Calendar from "./components/Calendar";
-import Login from "./components/LoginScreen";
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Calendar, { type CalendarProps} from "./components/Calendar";
+import Login, { type LoginProps} from "./components/LoginScreen";
+import Settings from "./components/Settings";
+import About from "./components/About";
+
 
 const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [session, setSession] = useState<string>("");
+  const [courses, setCourses] = useState<EventItem[]>([]);
+  const [isFetchingCourses, setIsFetchingCourses] = useState<boolean>(true);
 
-  const calendarProps = { session };
-  const loginProps = { setSession };
+  const calendarProps: CalendarProps = { session, courses, setCourses, isFetchingCourses, setIsFetchingCourses };
+  const loginProps: LoginProps = { setSession };
 
   function CustomCalendarDrawerContent(props: any) {
     return (
@@ -34,7 +41,7 @@ export default function App() {
       >
         <SafeAreaView>
           <DrawerItem
-            label="Calendar"
+            label="u:cal"
             labelStyle={{ fontSize: 25, color: "black" }}
             style={{ marginBottom: 5 }}
             onPress={() => {}}
@@ -44,6 +51,18 @@ export default function App() {
         </SafeAreaView>
 
         <SafeAreaView>
+          <View style={styles.drawerDivider} />
+          <DrawerItem
+            label="Settings"
+            onPress={() => {props.navigation.navigate("Settings")}}
+            icon={() => (<MaterialIcons name="settings" size={24} color="grey"/>)}
+          />
+
+          <DrawerItem
+            label="About"
+            onPress={() => {props.navigation.navigate("About")}}
+            icon={() => (<AntDesign name="questioncircleo" size={24} color="grey" />)}
+          />
           <View style={styles.drawerDivider} />
           <DrawerItem
             label="Logout"
@@ -68,74 +87,78 @@ export default function App() {
         <Drawer.Navigator
           initialRouteName="Work Week"
           screenOptions={{
-            title: "Calendar",
+            title: "u:cal",
           }}
           drawerContent={(props) => <CustomCalendarDrawerContent {...props} />}
         >
-          <Drawer.Screen
-            name="Week"
-            options={{
-              drawerLabel: "Week",
-              drawerActiveTintColor: "#25A9E2",
-              drawerIcon: ({ focused }) => (
-                <MaterialCommunityIcons
-                  name="calendar-week"
-                  size={24}
-                  color={focused ? "#25A9E2" : "grey"}
-                />
-              ),
-            }}
-          >
-            {() => <Calendar viewMode={"week"} {...calendarProps} />}
-          </Drawer.Screen>
-          <Drawer.Screen
-            name="Work Week"
-            options={{
-              drawerLabel: "Work Week",
-              drawerActiveTintColor: "#25A9E2",
-              drawerIcon: ({ focused }) => (
-                <MaterialIcons
-                  name="calendar-view-week"
-                  size={24}
-                  color={focused ? "#25A9E2" : "grey"}
-                />
-              ),
-            }}
-          >
-            {() => <Calendar viewMode={"workWeek"} {...calendarProps} />}
-          </Drawer.Screen>
-          <Drawer.Screen
-            name="3 Days"
-            options={{
-              drawerLabel: "3 Days",
-              drawerActiveTintColor: "#25A9E2",
-              drawerIcon: ({ focused }) => (
-                <MaterialCommunityIcons
-                  name="view-week-outline"
-                  size={24}
-                  color={focused ? "#25A9E2" : "grey"}
-                />
-              ),
-            }}
-          >
-            {() => <Calendar viewMode={"threeDays"} {...calendarProps} />}
-          </Drawer.Screen>
-          <Drawer.Screen
-            name="Day"
-            options={{
-              drawerLabel: "Day",
-              drawerActiveTintColor: "#25A9E2",
-              drawerIcon: ({ focused }) => (
-                <MaterialCommunityIcons
-                  name="view-day-outline"
-                  size={24}
-                  color={focused ? "#25A9E2" : "grey"}
-                />
-              ),
-            }}
-          >
-            {() => <Calendar viewMode={"day"} {...calendarProps} />}
-          </Drawer.Screen>
+          <Drawer.Group screenOptions={{
+            drawerActiveTintColor: "#25A9E2",
+            drawerInactiveTintColor: "grey",
+          }}>
+            <Drawer.Screen
+              name="Week"
+              options={{
+                drawerLabel: "Week",
+                drawerIcon: ({ focused }) => (
+                  <MaterialCommunityIcons
+                    name="calendar-week"
+                    size={24}
+                    color={focused ? "#25A9E2" : "grey"}
+                  />
+                ),
+              }}
+            >
+              {() => <Calendar viewMode={"week"} {...calendarProps} />}
+            </Drawer.Screen>
+            <Drawer.Screen
+              name="Work Week"
+              options={{
+                drawerLabel: "Work Week",
+                drawerIcon: ({ focused }) => (
+                  <MaterialIcons
+                    name="calendar-view-week"
+                    size={24}
+                    color={focused ? "#25A9E2" : "grey"}
+                  />
+                ),
+              }}
+            >
+              {() => <Calendar viewMode={"workWeek"} {...calendarProps} />}
+            </Drawer.Screen>
+            <Drawer.Screen
+              name="3 Days"
+              options={{
+                drawerLabel: "3 Days",
+                drawerIcon: ({ focused }) => (
+                  <MaterialCommunityIcons
+                    name="view-week-outline"
+                    size={24}
+                    color={focused ? "#25A9E2" : "grey"}
+                  />
+                ),
+              }}
+            >
+              {() => <Calendar viewMode={"threeDays"} {...calendarProps} />}
+            </Drawer.Screen>
+            <Drawer.Screen
+              name="Day"
+              options={{
+                drawerLabel: "Day",
+                drawerIcon: ({ focused }) => (
+                  <MaterialCommunityIcons
+                    name="view-day-outline"
+                    size={24}
+                    color={focused ? "#25A9E2" : "grey"}
+                  />
+                ),
+              }}
+            >
+              {() => <Calendar viewMode={"day"} {...calendarProps} />}
+            </Drawer.Screen>
+            <Drawer.Screen name="Settings" options={{drawerLabel: "Settings", title: "Settings", drawerItemStyle: {display: "none"} }} component={Settings} />
+            <Drawer.Screen name="About" options={{drawerLabel: "About", title: "About", drawerItemStyle: {display: "none"} }} component={About} />
+
+          </Drawer.Group>
         </Drawer.Navigator>
       </NavigationContainer>
     );
