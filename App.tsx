@@ -11,6 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import * as SecureStore from "expo-secure-store";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import Calendar from "./components/Calendar";
 import Login from "./components/LoginScreen";
 
@@ -34,7 +35,7 @@ export default function App() {
       >
         <SafeAreaView>
           <DrawerItem
-            label="Calendar"
+            label="u:cal"
             labelStyle={{ fontSize: 25, color: "black" }}
             style={{ marginBottom: 5 }}
             onPress={() => {}}
@@ -44,6 +45,17 @@ export default function App() {
         </SafeAreaView>
 
         <SafeAreaView>
+          <DrawerItem
+            label="Settings"
+            onPress={() => {}}
+            icon={() => (<MaterialIcons name="settings" size={24} color="grey"/>)}
+          />
+
+          <DrawerItem
+            label="About"
+            onPress={() => {}}
+            icon={() => (<AntDesign name="questioncircleo" size={24} color="grey" />)}
+          />
           <View style={styles.drawerDivider} />
           <DrawerItem
             label="Logout"
