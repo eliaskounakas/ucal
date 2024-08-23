@@ -51,12 +51,13 @@ export default function App() {
         </SafeAreaView>
 
         <SafeAreaView>
-          <View style={styles.drawerDivider} />
-          <DrawerItem
+          {/* <View style={styles.drawerDivider} />
+          <DrawerItem 
             label="Settings"
             onPress={() => {props.navigation.navigate("Settings")}}
             icon={() => (<MaterialIcons name="settings" size={24} color="grey"/>)}
-          />
+            style={{ display: "none" }}
+          /> */}
 
           <DrawerItem
             label="About"
