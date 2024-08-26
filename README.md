@@ -1,4 +1,4 @@
-If you want to take this down, send me an email: elias.kounakas@proton.me
+If you want me to take this down, send me an email with a good reason: elias.kounakas@proton.me
 
 ## Start Developing
 
