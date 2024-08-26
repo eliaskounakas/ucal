@@ -1,3 +1,5 @@
+If you want to take this down, send me an email: elias.kounakas@proton.me
+
 ## Start Developing
 
 1. Install [Bun](https://bun.sh/) (You can also use npm, pnpm, ...)
