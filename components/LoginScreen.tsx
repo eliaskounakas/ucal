@@ -59,7 +59,7 @@ export default function Login({ setSession }: LoginProps) {
     <>
       <LoginScreen
         style={styles.loginContainer}
-        logoImageSource={require("../assets/icon.png")}
+        logoImageSource={require("../assets/favicon.png")}
         loginButtonText={isLoading ? "Logging in..." : "Login"}
         loginButtonStyle={{
           backgroundColor: isLoading ? "#ADD8E6" : "#25A9E2",
