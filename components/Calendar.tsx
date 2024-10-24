@@ -49,11 +49,10 @@ export default function Calendar(props: CalendarProps) {
     if (props.isFetchingCourses) {
       fetchCourses(props.session)
         .then((res) => {
-          console.log(res);
-          //props.setCourses(() => [...res]);
+          props.setCourses(() => [...res]);
         })
         .finally(() => {
-          //props.setIsFetchingCourses(false);
+          props.setIsFetchingCourses(false);
         });
     }
   }, []);
@@ -61,7 +60,7 @@ export default function Calendar(props: CalendarProps) {
   return (
     <>
       <SafeAreaView style={styles.container}>
-      <CalendarContainer>
+      <CalendarContainer >
         <CalendarHeader />
         <CalendarBody />
       </CalendarContainer>
