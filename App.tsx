@@ -109,7 +109,7 @@ export default function App() {
                 ),
               }}
             >
-              {() => <Calendar viewMode={"week"} {...calendarProps} />}
+              {() => <Calendar  {...calendarProps} />}
             </Drawer.Screen>
             <Drawer.Screen
               name="Work Week"
@@ -124,7 +124,7 @@ export default function App() {
                 ),
               }}
             >
-              {() => <Calendar viewMode={"workWeek"} {...calendarProps} />}
+              {() => <Calendar  {...calendarProps} />}
             </Drawer.Screen>
             <Drawer.Screen
               name="3 Days"
@@ -139,7 +139,7 @@ export default function App() {
                 ),
               }}
             >
-              {() => <Calendar viewMode={"threeDays"} {...calendarProps} />}
+              {() => <Calendar  {...calendarProps} />}
             </Drawer.Screen>
             <Drawer.Screen
               name="Day"
@@ -154,7 +154,7 @@ export default function App() {
                 ),
               }}
             >
-              {() => <Calendar viewMode={"day"} {...calendarProps} />}
+              {() => <Calendar  {...calendarProps} />}
             </Drawer.Screen>
             <Drawer.Screen name="Settings" options={{drawerLabel: "Settings", title: "Settings", drawerItemStyle: {display: "none"} }} component={Settings} />
             <Drawer.Screen name="About" options={{drawerLabel: "About", title: "About", drawerItemStyle: {display: "none"} }} component={About} />

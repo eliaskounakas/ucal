@@ -10,10 +10,11 @@ import {
 } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("screen");
 import {
-  TimelineCalendar,
+  CalendarBody, 
+  CalendarContainer, 
+  CalendarHeader,
   EventItem,
-  CalendarViewMode,
-  PackedEvent,
+  PackedEvent
 } from "@howljs/calendar-kit";
 import UspaceClient from "uspace-api-wrapper";
 import type { CourseData } from "uspace-api-wrapper/dist/entities";
@@ -22,7 +23,6 @@ import MoodleLogo from "../assets/moodle.svg";
 import WebLink from "./WebLink";
 
 export interface CalendarProps {
-  viewMode?: CalendarViewMode;
   session: string;
   courses: EventItem[];
   setCourses: Function;
@@ -60,18 +60,10 @@ export default function Calendar(props: CalendarProps) {
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <TimelineCalendar
-          viewMode={props.viewMode}
-          events={props.courses}
-          isLoading={props.isFetchingCourses}
-          initialDate="2024-03-01"
-          theme={{ loadingBarColor: "#0063A6" }}
-          onPressEvent={(event) => {
-            setModalProps(generateModalProps(event));
-            setModalVisible(true);
-            console.log(event);
-          }}
-        />
+      <CalendarContainer >
+        <CalendarHeader />
+        <CalendarBody />
+      </CalendarContainer>
 
         <Modal
           transparent={true}
@@ -170,19 +162,21 @@ function generateModalProps(event: PackedEvent): CalendarModalProps {
     props.startTime = start.toTimeString().slice(0, 5);
     props.endTime = end.toTimeString().slice(0, 5);
 
-    const date = new Date(Date.parse(event.start));
-    props.date = date.toLocaleDateString("en-us", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    if (event.start.dateTime) {
+      const date = new Date(Date.parse(event.start.dateTime));
+      props.date = date.toLocaleDateString("en-us", {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    } else console.error("event.start.dateTime Property is undefined!");
   }
 
   return props;
 }
 
-async function fetchCourses(session: string): Promise<EventItem[]> {
+async function fetchCourses(session: string): Promise<any> {
   let courses: CourseData[] = [];
   let events: EventItem[] = [];
   let id: number = 1;
@@ -222,8 +216,8 @@ async function fetchCourses(session: string): Promise<EventItem[]> {
         id: `course${id}`,
         title: title,
         color: color,
-        start: start,
-        end: end,
+        start: {dateTime: start},
+        end: {dateTime: end},
         location: location,
         ufindLink: ufindLink,
         moodleLink: moodleLink,
