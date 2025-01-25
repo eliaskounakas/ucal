@@ -27,4 +27,4 @@ In the output, you'll find options to open the app in a
 
 For starters, I recommend using Expo Go, it's the quickest way to get going. For production, a development build should be used.
 
-project is paused
+project is paused indefinetly
